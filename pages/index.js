@@ -10,6 +10,8 @@ export default function Home() {
 
   const [shouldShowClockOut, toggleButtons] = useState(false);
 
+  const [status, setStatus] = useState('');
+
   const fetchDateTime = async () => {
     const res = await fetch(`http://localhost:3000/api`)
     const dateTime = await res.json()
@@ -23,21 +25,21 @@ export default function Home() {
       body: JSON.stringify(row)
     })
 
-    const status = await res.json()
-    console.log(status)
+    const json = await res.json()
+    setStatus(json.status)
   }
 
   const handleClockIn = async () => {
     const dateTime = await fetchDateTime()
     setDate(dateTime.date)
-    setStartTime(dateTime.dateObject)
+    setStartTime(Date.now())
     setStartTimeString(dateTime.time)
     toggleButtons(true)
   }
 
   const handleClockOut = async () => {
     const dateTime = await fetchDateTime()
-    setEndTime(dateTime.dateObject)
+    setEndTime(Date.now())
     setEndTimeString(dateTime.time)
     toggleButtons(false)
   }
@@ -61,6 +63,7 @@ export default function Home() {
         <button onClick={handleClockOut}>Clock out</button>
       }
       {endTime && <button onClick={handleSubmit}>Submit</button>}
+      <p>{status}</p>
     </div>
   )
 }

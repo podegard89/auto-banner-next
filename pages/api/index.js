@@ -20,23 +20,20 @@ export default async function handler(req, res) {
     }
 }
 
-let startTime;
 const handleGet = async () => {
     const dateObject = new Date();
     const date = formatDate(dateObject);
     const time = dateObject.toLocaleTimeString();
-    return { date, time, dateObject };
+    return { date, time };
 }
 
 const handlePost = async (data) => {
     const sheet = new Sheet();
     await sheet.load();
-    // this needs to be improved by not passing any date objects
-    // to the client and instead creating start and end Date
-    // objects server-side on request
-    const endTime = new Date(data.endTime);
-    const startTime = new Date(data.startTime);
-    const hours = msToHours(endTime - startTime);
+    // this needs to be improved by not passing any unnecessary
+    // date information to the client and instead creating start 
+    // and end Date objects server-side on get request
+    const hours = msToHours(data.endTime - data.startTime);
     const date = data.date;
     const start = data.startTimeString;
     const end = data.endTimeString;
