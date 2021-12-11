@@ -5,26 +5,46 @@ export default function Home() {
   const [date, setDate] = useState('');
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
+  const [startTimeString, setStartTimeString] = useState('');
+  const [endTimeString, setEndTimeString] = useState('');
 
   const [shouldShowClockOut, toggleButtons] = useState(false);
 
   const fetchDateTime = async () => {
-    const res = await fetch(`http://localhost:3000/api/dateTime`)
+    const res = await fetch(`http://localhost:3000/api`)
     const dateTime = await res.json()
     return dateTime
+  }
+
+  const postRow = async (row) => {
+    const res = await fetch("http://localhost:3000/api", {
+      method: "POST",
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(row)
+    })
+
+    const status = await res.json()
+    console.log(status)
   }
 
   const handleClockIn = async () => {
     const dateTime = await fetchDateTime()
     setDate(dateTime.date)
-    setStartTime(dateTime.time)
+    setStartTime(dateTime.dateObject)
+    setStartTimeString(dateTime.time)
     toggleButtons(true)
   }
 
   const handleClockOut = async () => {
     const dateTime = await fetchDateTime()
-    setEndTime(dateTime.time)
+    setEndTime(dateTime.dateObject)
+    setEndTimeString(dateTime.time)
     toggleButtons(false)
+  }
+
+  const handleSubmit = async () => {
+    const row = { date, startTime, endTime, startTimeString, endTimeString }
+    await postRow(row)
   }
 
   return (
@@ -34,12 +54,13 @@ export default function Home() {
       </Head>
 
       <h2>Date: {date}</h2>
-      <h2>Clock-in Time: {startTime}</h2>
-      <h2>Clock-out Time: {endTime}</h2>
+      <h2>Clock-in Time: {startTimeString}</h2>
+      <h2>Clock-out Time: {endTimeString}</h2>
       {!shouldShowClockOut ?
         <button onClick={handleClockIn}>Clock in</button> :
         <button onClick={handleClockOut}>Clock out</button>
       }
+      {endTime && <button onClick={handleSubmit}>Submit</button>}
     </div>
   )
 }
