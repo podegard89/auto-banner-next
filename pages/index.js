@@ -15,13 +15,13 @@ export default function Home() {
   const [crawlStatus, setCrawlStatus] = useState('');
 
   const fetchDateTime = async () => {
-    const res = await fetch(`http://localhost:3000/api`);
+    const res = await fetch(`http://localhost:3000/api/dateTime`);
     const dateTime = await res.json();
     return dateTime;
   }
 
   const postRow = async (row) => {
-    const res = await fetch("http://localhost:3000/api", {
+    const res = await fetch("http://localhost:3000/api/sheet", {
       method: "POST",
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(row)
@@ -59,8 +59,6 @@ export default function Home() {
     await postRow(row);
     setShouldShowCrawl(true);
   }
-
-
 
   return (
     <div>
