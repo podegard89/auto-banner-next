@@ -2,20 +2,24 @@
 export default async function handler(req, res) {
     if (req.method == 'GET') {
         try {
-            const dateTime = await handleGet();
-            res.status(200).json(dateTime);
+            const dateObject = new Date();
+            const date = formatDate(dateObject);
+            res.status(200).json({ date });
+        } catch (error) {
+            console.log(error);
+            res.status(400).json({ status: "Server error" });
+        }
+    } else if (req.method == 'POST') {
+        try {
+            const dateObject = new Date();
+            const localeString = dateObject.toLocaleTimeString();
+            const milliseconds = Date.now();
+            res.status(200).json({ localeString, milliseconds });
         } catch (error) {
             console.log(error);
             res.status(400).json({ status: "Server error" });
         }
     }
-}
-
-const handleGet = async () => {
-    const dateObject = new Date();
-    const date = formatDate(dateObject);
-    const time = dateObject.toLocaleTimeString();
-    return { date, time };
 }
 
 const formatDate = (date) => {

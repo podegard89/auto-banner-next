@@ -1,8 +1,7 @@
 import Head from 'next/head'
 import { useState } from 'react'
 
-export default function Home() {
-  const [date, setDate] = useState('');
+export default function Home({ date }) {
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
   const [startTimeString, setStartTimeString] = useState('');
@@ -14,10 +13,12 @@ export default function Home() {
   const [sheetStatus, setSheetStatus] = useState('');
   const [crawlStatus, setCrawlStatus] = useState('');
 
-  const fetchDateTime = async () => {
-    const res = await fetch(`http://localhost:3000/api/dateTime`);
-    const dateTime = await res.json();
-    return dateTime;
+  const fetchTime = async () => {
+    const res = await fetch(`http://localhost:3000/api/dateTime`, {
+      method: "POST"
+    });
+    const timeObject = await res.json();
+    return timeObject;
   }
 
   const postRow = async (row) => {
@@ -40,17 +41,16 @@ export default function Home() {
   }
 
   const handleClockIn = async () => {
-    const dateTime = await fetchDateTime();
-    setDate(dateTime.date);
-    setStartTime(Date.now());
-    setStartTimeString(dateTime.time);
+    const timeObject = await fetchTime();
+    setStartTime(timeObject.milliseconds);
+    setStartTimeString(timeObject.localeString);
     toggleButtons(true);
   }
 
   const handleClockOut = async () => {
-    const dateTime = await fetchDateTime();
-    setEndTime(Date.now());
-    setEndTimeString(dateTime.time);
+    const timeObject = await fetchTime();
+    setEndTime(timeObject.milliseconds);
+    setEndTimeString(timeObject.localeString);
     toggleButtons(false);
   }
 
@@ -81,9 +81,9 @@ export default function Home() {
   )
 }
 
-// export const getServerSideProps = async () => {
-//   const res = await fetch(`http://localhost:3000/api/dates`)
-//   const dateTime = await res.json()
-//   console.log(dateTime)
-//   return { props: { dateTime } }
-// }
+export const getStaticProps = async () => {
+  const res = await fetch(`http://localhost:3000/api/dateTime`)
+  const date = await res.json()
+  console.log(date)
+  return { props: date }
+}
