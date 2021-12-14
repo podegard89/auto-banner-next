@@ -1,7 +1,7 @@
 import crawl from '../../../crawl'
 
 export default async function handler(req, res) {
-    if (req.method == 'POST') {
+    if (req.method == 'GET') {
         try {
             await crawl();
             res.status(200).json({ status: "Success" });

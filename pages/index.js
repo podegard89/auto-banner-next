@@ -33,9 +33,7 @@ export default function Home({ date }) {
   }
 
   const handleCrawl = async () => {
-    const res = await fetch(`http://localhost:3000/api/crawl`, {
-      method: "POST"
-    });
+    const res = await fetch(`http://localhost:3000/api/crawl`);
     const json = res.json();
     setCrawlStatus(json.status);
   }

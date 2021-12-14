@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer');
 const secrets = require('./secrets');
 const Sheet = require('./sheet');
 
-export default async function crawlBanner() {
+export default async function crawl() {
 
     //headless in prod
     //head in dev
