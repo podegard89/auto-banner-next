@@ -46,7 +46,7 @@ export default async function crawl() {
             await waitThenClick('[value="Next"]');
         }
 
-        const shiftDate = row.currDate;
+        const shiftDate = row.date;
         const shiftHours = row.hours;
         console.log({ shiftDate, shiftHours });
 

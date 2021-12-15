@@ -12,16 +12,16 @@ export default async function handler(req, res) {
     }
 }
 
-const handlePost = async (data) => {
+const handlePost = async (row) => {
     const sheet = new Sheet();
     await sheet.load();
     // this needs to be improved by not passing any unnecessary
     // date information to the client and instead creating start 
     // and end Date objects server-side on get request
-    const hours = msToHours(data.endTime - data.startTime);
-    const date = data.date;
-    const start = data.startTimeString;
-    const end = data.endTimeString;
+    const hours = msToHours(row.endTime - row.startTime);
+    const date = row.date;
+    const start = row.startTimeString;
+    const end = row.endTimeString;
     const row = { date, start, end, hours };
     await sheet.addRows(row, 0);
 }
