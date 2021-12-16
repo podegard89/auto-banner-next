@@ -1,9 +1,10 @@
 import crawl from '../../../crawl'
 
 export default async function handler(req, res) {
-    if (req.method == 'GET') {
+    if (req.method === 'POST') {
         try {
-            await crawl();
+            const payPeriod = Number(req.body);
+            await crawl(payPeriod);
             res.status(200).json({ status: "Success" });
         } catch (error) {
             console.log(error);

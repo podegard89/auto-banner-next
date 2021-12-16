@@ -2,60 +2,53 @@ import Head from 'next/head'
 import { useState } from 'react'
 
 export default function Home({ date }) {
-  const [startTime, setStartTime] = useState('');
-  const [endTime, setEndTime] = useState('');
-  const [startTimeString, setStartTimeString] = useState('');
-  const [endTimeString, setEndTimeString] = useState('');
+  // const [startTime, setStartTime] = useState('');
+  // const [endTime, setEndTime] = useState('');
+  const [start, setStart] = useState('');
+  const [end, setEnd] = useState('');
 
   const [shouldShowClockOut, toggleButtons] = useState(false);
   const [shouldShowCrawl, setShouldShowCrawl] = useState(false);
 
-  const [sheetStatus, setSheetStatus] = useState('');
+  const [clockedStatus, setClockedStatus] = useState('');
   const [crawlStatus, setCrawlStatus] = useState('');
 
-  const fetchTime = async () => {
-    const res = await fetch(`http://localhost:3000/api/dateTime`, {
-      method: "POST"
-    });
-    const timeObject = await res.json();
-    return timeObject;
+  const [payPeriod, setPayPeriod] = useState(10);
+
+  const handleInputChange = (event) => {
+    setPayPeriod(event.target.value)
   }
 
-  const postRow = async (row) => {
-    const res = await fetch("http://localhost:3000/api/sheet", {
+  const clockIn = async () => {
+    const res = await fetch(`http://localhost:3000/api/clock-in`, {
       method: "POST",
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(row)
+      headers: { 'Content-Type': 'text/plain' },
+      body: date
     });
 
     const json = await res.json();
-    setSheetStatus(json.status);
+    setStart(json.start);
+    setClockedStatus(json.status);
+  }
+
+  const clockOut = async () => {
+    const res = await fetch(`http://localhost:3000/api/clock-out`, {
+      method: "POST"
+    });
+
+    const json = await res.json();
+    setEnd(json.end);
+    setClockedStatus(json.status);
   }
 
   const handleCrawl = async () => {
-    const res = await fetch(`http://localhost:3000/api/crawl`);
+    const res = await fetch(`http://localhost:3000/api/crawl`, {
+      method: "POST",
+      headers: { 'Content-Type': 'text/plain' },
+      body: payPeriod
+    });
     const json = res.json();
     setCrawlStatus(json.status);
-  }
-
-  const handleClockIn = async () => {
-    const timeObject = await fetchTime();
-    setStartTime(timeObject.milliseconds);
-    setStartTimeString(timeObject.localeString);
-    toggleButtons(true);
-  }
-
-  const handleClockOut = async () => {
-    const timeObject = await fetchTime();
-    setEndTime(timeObject.milliseconds);
-    setEndTimeString(timeObject.localeString);
-    toggleButtons(false);
-  }
-
-  const handleSheetSubmit = async () => {
-    const row = { date, startTime, endTime, startTimeString, endTimeString };
-    await postRow(row);
-    setShouldShowCrawl(true);
   }
 
   return (
@@ -65,22 +58,23 @@ export default function Home({ date }) {
       </Head>
 
       <h2>Date: {date}</h2>
-      <h2>Clock-in Time: {startTimeString}</h2>
-      <h2>Clock-out Time: {endTimeString}</h2>
-      {!shouldShowClockOut ?
-        <button onClick={handleClockIn}>Clock in</button> :
-        <button onClick={handleClockOut}>Clock out</button>
-      }
-      {endTime && <button onClick={handleSheetSubmit}>Write time to sheet</button>}
-      <p>{sheetStatus}</p>
-      {shouldShowCrawl && <button onClick={handleCrawl}>Crawl 🐛🐜</button>}
+      <h2>Clock-in Time: {start}</h2>
+      <h2>Clock-out Time: {end}</h2>
+
+      <button onClick={clockIn}>Clock in</button>
+      <button onClick={clockOut}>Clock out</button>
+
+      <p>{clockedStatus}</p>
+      Enter pay period length (days):
+      <input type="number" value={payPeriod} onChange={handleInputChange} />
+      <button onClick={handleCrawl}>Crawl 🐛🐜</button>
       <p>{crawlStatus}</p>
     </div>
   )
 }
 
 export const getStaticProps = async () => {
-  const res = await fetch(`http://localhost:3000/api/dateTime`)
+  const res = await fetch(`http://localhost:3000/api/date`)
   const date = await res.json()
   console.log(date)
   return { props: date }

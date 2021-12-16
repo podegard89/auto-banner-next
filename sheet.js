@@ -13,8 +13,8 @@ class Sheet {
         await this.doc.loadInfo();
     }
 
-    async addRows(rows, i) {
-        const sheet = this.doc.sheetsByIndex[i];
+    async addRows(rows) {
+        const sheet = this.doc.sheetsByIndex[0];
         await sheet.addRows([rows]);
     }
 
@@ -22,6 +22,12 @@ class Sheet {
         const sheet = this.doc.sheetsByIndex[i];
         const rows = await sheet.getRows();
         return rows;
+    }
+
+    async getCurrentShift() {
+        const sheet = this.doc.sheetsByIndex[0];
+        const rows = await sheet.getRows();
+        return rows[rows.length - 1];
     }
 }
 

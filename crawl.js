@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer');
 const secrets = require('./secrets');
 const Sheet = require('./sheet');
 
-export default async function crawl() {
+export default async function crawl(payPeriod) {
 
     //headless in prod
     //head in dev
@@ -34,9 +34,9 @@ export default async function crawl() {
     }
 
     // get number of days in last pay period from sheet 3
-    const payPeriods = await sheet.getRows(2);
-    const payPeriod = payPeriods[payPeriods.length - 1].payPeriod;
-    console.log(payPeriod)
+    // const payPeriods = await sheet.getRows(2);
+    // const payPeriod = payPeriods[payPeriods.length - 1].payPeriod;
+    // console.log(payPeriod)
     // grabs last payPeriod rows from time sheet
     const timeSheetRows = (await sheet.getRows(0)).slice(1).slice(-payPeriod);
     console.log(timeSheetRows.length);
