@@ -4,7 +4,6 @@ import { msToHours } from "../../../functions/dateTime"
 export default async function handler(req, res) {
     const sheet = new Sheet();
     await sheet.load();
-    const currentShift = await sheet.getCurrentShift();
 
     if (req.method === 'POST') {
         try {
@@ -12,6 +11,7 @@ export default async function handler(req, res) {
             const end = dateObject.toLocaleTimeString();
             const endMS = Date.now();
 
+            const currentShift = await sheet.getCurrentShift(req.body);
             currentShift.end = end;
             currentShift.endMS = endMS;
             currentShift.hours = msToHours(endMS - currentShift.startMS - 1);

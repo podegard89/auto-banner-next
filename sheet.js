@@ -24,10 +24,15 @@ class Sheet {
         return rows;
     }
 
-    async getCurrentShift() {
+    async getCurrentShift(date) {
         const sheet = this.doc.sheetsByIndex[0];
         const rows = await sheet.getRows();
-        return rows[rows.length - 1];
+        const lastRow = rows[rows.length - 1];
+
+        if (lastRow.date === date) {
+            return lastRow;
+        }
+        return {};
     }
 }
 
