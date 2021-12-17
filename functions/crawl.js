@@ -1,6 +1,6 @@
 const puppeteer = require('puppeteer');
-const secrets = require('./secrets');
-const Sheet = require('./sheet');
+const secrets = require('../secrets');
+const Sheet = require('../sheet');
 
 export default async function crawl(payPeriod) {
 
@@ -62,6 +62,6 @@ export default async function crawl(payPeriod) {
 
     // I am not automatically closing the browser for now so I can confirm
     // everything is working and manually submit hours for approval.
-    // await browser.close();
+    await browser.close();
 
 }

@@ -1,4 +1,4 @@
-import crawl from '../../../crawl'
+import crawl from '../../../functions/crawl'
 
 export default async function handler(req, res) {
     if (req.method === 'POST') {
