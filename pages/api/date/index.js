@@ -12,15 +12,13 @@ export default async function handler(req, res) {
             const date = formatDate(dateObject);
             const currentShift = await sheet.getCurrentShift(date);
 
-            const clockedIn = currentShift.start && !currentShift.end;
-            const doneForDay = currentShift.start && currentShift.end;
-
             const clockStatus = {
                 date,
-                clockedIn,
+                clockedIn: currentShift.start && !currentShift.end,
                 startTime: currentShift.start,
                 endTime: currentShift.end,
-                doneForDay
+                shiftHours: currentShift.hours,
+                doneForDay: currentShift.start && currentShift.end
             }
 
             res.status(200).json(clockStatus);

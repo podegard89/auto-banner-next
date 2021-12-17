@@ -2,12 +2,10 @@ import Head from 'next/head'
 import { useState } from 'react'
 import LoadingButton from '@mui/lab/LoadingButton'
 
-export default function Home({ date, clockedIn, startTime, endTime, doneForDay }) {
-  // const [startTime, setStartTime] = useState('');
-  // const [endTime, setEndTime] = useState('');
+export default function Home({ date, clockedIn, startTime, endTime, doneForDay, shiftHours }) {
   const [start, setStart] = useState(startTime);
   const [end, setEnd] = useState(endTime);
-  const [hours, setHours] = useState('');
+  const [hours, setHours] = useState(shiftHours);
 
   const [isClockedIn, setIsClockedIn] = useState(clockedIn);
   const [isDoneForDay, setIsDoneForDay] = useState(doneForDay);
@@ -23,15 +21,21 @@ export default function Home({ date, clockedIn, startTime, endTime, doneForDay }
     setPayPeriod(event.target.value)
   }
 
+  const httpPost = async (route, text) => {
+    const res = await fetch(`http://localhost:3000/${route}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: text
+    });
+    console.log(res)
+    const json = await res.json();
+    return json;
+  }
+
   const clockIn = async () => {
     setLoading(true);
-    const res = await fetch(`http://localhost:3000/api/clock-in`, {
-      method: "POST",
-      headers: { 'Content-Type': 'text/plain' },
-      body: date
-    });
-
-    const json = await res.json();
+    const json = await httpPost('api/clock-in', date);
+    console.log(json)
     setStart(json.start);
     setClockedStatus(json.status);
     setIsClockedIn(true);
@@ -40,14 +44,7 @@ export default function Home({ date, clockedIn, startTime, endTime, doneForDay }
 
   const clockOut = async () => {
     setLoading(true);
-    const res = await fetch(`http://localhost:3000/api/clock-out`, {
-      method: "POST",
-      headers: { 'Content-Type': 'text/plain' },
-      body: date
-    });
-
-
-    const json = await res.json();
+    const json = await httpPost('api/clock-out', date);
     setEnd(json.end);
     setClockedStatus(json.status);
     setHours(json.hours);
@@ -58,12 +55,7 @@ export default function Home({ date, clockedIn, startTime, endTime, doneForDay }
 
   const handleCrawl = async () => {
     setCrawlLoading(true);
-    const res = await fetch(`http://localhost:3000/api/crawl`, {
-      method: "POST",
-      headers: { 'Content-Type': 'text/plain' },
-      body: payPeriod
-    });
-    const json = res.json();
+    const json = await httpPost('api/crawl', payPeriod);
     setCrawlStatus(json.status);
     setCrawlLoading(false);
   }
@@ -99,7 +91,7 @@ export default function Home({ date, clockedIn, startTime, endTime, doneForDay }
 
       <p>{clockedStatus}</p>
       <h2>Crawl banner and enter hours from time sheet</h2>
-      <p>Enter pay period length (days): <input type="number" value={payPeriod} onChange={handleInputChange} /></p>
+      <p>Enter pay period length (1-10 days): <input type="number" value={payPeriod} onChange={handleInputChange} min="1" max="10" /></p>
 
       <LoadingButton variant='contained' loading={crawlLoading} onClick={handleCrawl}>Crawl 🐛🐜</LoadingButton>
       <p>{crawlStatus}</p>
