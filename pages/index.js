@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-page-custom-font */
 import Head from 'next/head'
 import { useState } from 'react'
 import LoadingButton from '@mui/lab/LoadingButton'
@@ -12,10 +13,16 @@ export default function Home({ date, clockedIn, startTime, endTime, doneForDay, 
 
   const [loading, setLoading] = useState(false);
   const [crawlLoading, setCrawlLoading] = useState(false);
+  const [submitLoading, setSubmitLoading] = useState(false);
+
   const [clockedStatus, setClockedStatus] = useState('');
   const [crawlStatus, setCrawlStatus] = useState('');
+  const [submitStatus, setSubmitStatus] = useState('');
 
   const [payPeriod, setPayPeriod] = useState(10);
+
+  const shouldShowClockIn = !isClockedIn && !isDoneForDay;
+  const shouldShowClockOut = isClockedIn && !isDoneForDay;
 
   const handleInputChange = (event) => {
     setPayPeriod(event.target.value)
@@ -60,10 +67,17 @@ export default function Home({ date, clockedIn, startTime, endTime, doneForDay, 
     setCrawlLoading(false);
   }
 
+  const handleSubmit = async () => {
+    setSubmitLoading(true);
+    const json = await httpPost('api/submit-hours');
+    setSubmitStatus(json.status);
+    setSubmitLoading(false);
+  }
+
   return (
     <div>
       <Head>
-        <title>balls</title>
+        <title>Time Clock 📅</title>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
         <link
           rel="stylesheet"
@@ -84,17 +98,19 @@ export default function Home({ date, clockedIn, startTime, endTime, doneForDay, 
         <p>Hours: <strong>{hours}</strong></p>
       </div>
 
-      {!isClockedIn && !isDoneForDay &&
+      {shouldShowClockIn &&
         <LoadingButton variant="contained" onClick={clockIn} loading={loading}>Clock in ⏰</LoadingButton>}
-      {isClockedIn && !isDoneForDay &&
+      {shouldShowClockOut &&
         <LoadingButton variant='contained' onClick={clockOut} loading={loading}>Clock out ⏰</LoadingButton>}
 
       <p>{clockedStatus}</p>
       <h2>Crawl banner and enter hours from time sheet</h2>
       <p>Enter pay period length (1-10 days): <input type="number" value={payPeriod} onChange={handleInputChange} min="1" max="10" /></p>
 
-      <LoadingButton variant='contained' loading={crawlLoading} onClick={handleCrawl}>Crawl 🐛🐜</LoadingButton>
+      <LoadingButton variant='contained' loading={crawlLoading} onClick={handleCrawl} color='warning'>Crawl 🐛🐜</LoadingButton>
       <p>{crawlStatus}</p>
+      {crawlStatus && <LoadingButton variant='contained' loading={submitLoading} onClick={handleSubmit} color='success'>Send it! 👌</LoadingButton>}
+      <p>{submitStatus}</p>
     </div>
   )
 }
