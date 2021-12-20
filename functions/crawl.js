@@ -33,10 +33,6 @@ export default async function crawl(payPeriod) {
         await waitThenClick(row.selector);
     }
 
-    // get number of days in last pay period from sheet 3
-    // const payPeriods = await sheet.getRows(2);
-    // const payPeriod = payPeriods[payPeriods.length - 1].payPeriod;
-    // console.log(payPeriod)
     // grabs last payPeriod rows from time sheet
     const timeSheetRows = (await sheet.getRows(0)).slice(1).slice(-payPeriod);
     console.log(timeSheetRows.length);
@@ -53,6 +49,7 @@ export default async function crawl(payPeriod) {
         await waitThenClick(`[title="Enter Hours for 015 Hourly Pay for ${shiftDate}"]`);
 
         await page.waitForSelector('input[name="Hours"]');
+
         const hoursInput = await page.$('input[name="Hours"]');
         await hoursInput.click({ clickCount: 3 });
         await hoursInput.type(shiftHours);
@@ -62,6 +59,6 @@ export default async function crawl(payPeriod) {
 
     // I am not automatically closing the browser for now so I can confirm
     // everything is working and manually submit hours for approval.
-    await browser.close();
+    // await browser.close();
 
 }

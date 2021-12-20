@@ -38,14 +38,15 @@ export default async function submitForApproval() {
     await waitThenClick('input[value="Submit for Approval"]');
 
     await page.waitForSelector('input[type=password]');
-    await hoursInput.click({ clickCount: 3 });
-    await hoursInput.type(secrets.PASSWORD);
+    const passwordInput = await page.$('input[type=password]');
+    await passwordInput.click({ clickCount: 3 });
+    await passwordInput.type(secrets.PASSWORD);
 
     await waitThenClick('input[value=Submit]');
 
     // I am not automatically closing the browser for now so I can confirm
     // everything is working and manually submit hours for approval.
-
-    setTimeout(await browser.close(), 2000);
+    await page.waitForSelector('th[abbr=Approval]');
+    await browser.close();
 
 }

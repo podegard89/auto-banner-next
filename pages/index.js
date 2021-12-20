@@ -69,7 +69,7 @@ export default function Home({ date, clockedIn, startTime, endTime, doneForDay, 
 
   const handleSubmit = async () => {
     setSubmitLoading(true);
-    const json = await httpPost('api/submit-hours');
+    const json = await httpPost('api/submit');
     setSubmitStatus(json.status);
     setSubmitLoading(false);
   }
