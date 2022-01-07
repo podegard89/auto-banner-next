@@ -33,18 +33,22 @@ export default async function crawl(payPeriod) {
         await waitThenClick(row.selector);
     }
 
+
     // grabs last payPeriod rows from time sheet
     const timeSheetRows = (await sheet.getRows(0)).slice(1).slice(-payPeriod);
     console.log(timeSheetRows.length);
+
+    // stores objects containing info about logged shifts
+    const loggedShifts = [];
     // then loop through the data and enter it into banner time sheet
     for (const [index, row] of timeSheetRows.entries()) {
-        if (index === 5) {
+        if (index === timeSheetRows.length - 5) {
             await waitThenClick('[value="Next"]');
         }
 
         const shiftDate = row.date;
         const shiftHours = row.hours;
-        console.log({ shiftDate, shiftHours });
+        loggedShifts.push({ shiftDate, shiftHours });
 
         await waitThenClick(`[title="Enter Hours for 015 Hourly Pay for ${shiftDate}"]`);
 
@@ -59,6 +63,9 @@ export default async function crawl(payPeriod) {
 
     // I am not automatically closing the browser for now so I can confirm
     // everything is working and manually submit hours for approval.
-    // await browser.close();
+    // trying to figure out why the browser closes before entering the final day!!!
+    await browser.close();
+
+    return loggedShifts;
 
 }
