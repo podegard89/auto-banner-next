@@ -63,9 +63,10 @@ export default function Home({ date, clockedIn, startTime, endTime, doneForDay, 
   const handleCrawl = async () => {
     setCrawlLoading(true);
     const json = await httpPost('api/crawl', payPeriod);
-    setCrawlStatus(json.loggedShifts.map(s => {
+    const shiftJSX = json.loggedShifts.map(s => {
       return <p key={s.shiftDate}>{s.shiftDate}: {s.shiftHours} hours</p>
-    }));
+    });
+    setCrawlStatus(shiftJSX);
     setCrawlLoading(false);
   }
 
