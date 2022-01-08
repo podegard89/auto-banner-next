@@ -2,6 +2,11 @@ import LoadingButton from '@mui/lab/LoadingButton'
 import { useState } from 'react'
 
 const ClockInClockOut = (props) => {
+
+    const [clockedStatus, setClockedStatus] = useState('');
+    const [isDoneForDay, setIsDoneForDay] = useState(doneForDay);
+
+
     const clockIn = async () => {
         setLoading(true);
         const json = await httpPost('api/clock-in', date);

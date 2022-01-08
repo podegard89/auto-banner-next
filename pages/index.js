@@ -17,6 +17,7 @@ export default function Home({ date, clockedIn, startTime, endTime, doneForDay, 
 
   const [clockedStatus, setClockedStatus] = useState('');
   const [crawlStatus, setCrawlStatus] = useState('');
+  const [totalHours, setTotalHours] = useState(0);
   const [submitStatus, setSubmitStatus] = useState('');
 
   const [payPeriod, setPayPeriod] = useState(10);
@@ -63,9 +64,11 @@ export default function Home({ date, clockedIn, startTime, endTime, doneForDay, 
   const handleCrawl = async () => {
     setCrawlLoading(true);
     const json = await httpPost('api/crawl', payPeriod);
+    console.log(json)
     const shiftJSX = json.loggedShifts.map(s => {
       return <p key={s.shiftDate}>{s.shiftDate}: {s.shiftHours} hours</p>
     });
+    setTotalHours(json.totalHours);
     setCrawlStatus(shiftJSX);
     setCrawlLoading(false);
   }
@@ -112,7 +115,10 @@ export default function Home({ date, clockedIn, startTime, endTime, doneForDay, 
 
       <LoadingButton variant='contained' loading={crawlLoading} onClick={handleCrawl} color='warning'>Crawl 🐛🐜</LoadingButton>
       <p>{crawlStatus}</p>
-      {crawlStatus && <LoadingButton variant='contained' loading={submitLoading} onClick={handleSubmit} color='success'>Send it! 👌</LoadingButton>}
+      {crawlStatus && <div>
+        <p>Total: {totalHours} hours</p>
+        <LoadingButton variant='contained' loading={submitLoading} onClick={handleSubmit} color='success'>Send it! 👌</LoadingButton>
+      </div>}
       <p>{submitStatus}</p>
     </div>
   )

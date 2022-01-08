@@ -40,6 +40,7 @@ export default async function crawl(payPeriod) {
 
     // stores objects containing info about logged shifts
     const loggedShifts = [];
+    let totalHours = 0;
     // then loop through the data and enter it into banner time sheet
     for (const [index, row] of timeSheetRows.entries()) {
         if (index === timeSheetRows.length - 5) {
@@ -49,6 +50,7 @@ export default async function crawl(payPeriod) {
         const shiftDate = row.date;
         const shiftHours = row.hours;
         loggedShifts.push({ shiftDate, shiftHours });
+        totalHours += parseInt(shiftHours);
 
         await waitThenClick(`[title="Enter Hours for 015 Hourly Pay for ${shiftDate}"]`);
 
@@ -66,6 +68,6 @@ export default async function crawl(payPeriod) {
     // trying to figure out why the browser closes before entering the final day!!!
     await browser.close();
 
-    return loggedShifts;
+    return { loggedShifts, totalHours };
 
 }
