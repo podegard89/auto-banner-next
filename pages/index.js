@@ -2,6 +2,7 @@
 import Head from 'next/head'
 import { useState } from 'react'
 import LoadingButton from '@mui/lab/LoadingButton'
+import styles from '../styles/Home.module.css'
 
 export default function Home({ date, clockedIn, startTime, endTime, doneForDay, shiftHours }) {
   const [start, setStart] = useState(startTime);
@@ -114,8 +115,8 @@ export default function Home({ date, clockedIn, startTime, endTime, doneForDay, 
       <p>Enter pay period length (1-10 days): <input type="number" value={payPeriod} onChange={handleInputChange} min="1" max="10" /></p>
 
       <LoadingButton variant='contained' loading={crawlLoading} onClick={handleCrawl} color='warning'>Crawl 🐛🐜</LoadingButton>
-      <p>{crawlStatus}</p>
-      {crawlStatus && <div>
+      {crawlStatus && <div className={styles.crawlStatus}>
+        <p>{crawlStatus}</p>
         <p>Total: {totalHours} hours</p>
         <LoadingButton variant='contained' loading={submitLoading} onClick={handleSubmit} color='success'>Send it! 👌</LoadingButton>
       </div>}
