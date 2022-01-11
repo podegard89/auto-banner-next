@@ -2,6 +2,7 @@
 import Head from 'next/head'
 import { useState } from 'react'
 import LoadingButton from '@mui/lab/LoadingButton'
+import { Stack } from '@mui/material'
 import styles from '../styles/Home.module.css'
 
 export default function Home({ date, clockedIn, startTime, endTime, doneForDay, shiftHours }) {
@@ -82,7 +83,7 @@ export default function Home({ date, clockedIn, startTime, endTime, doneForDay, 
   }
 
   return (
-    <div>
+    <div className='main'>
       <Head>
         <title>Time Clock 📅</title>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
@@ -114,9 +115,9 @@ export default function Home({ date, clockedIn, startTime, endTime, doneForDay, 
       <h2>Crawl banner and enter hours from time sheet</h2>
       <p>Enter pay period length (1-10 days): <input type="number" value={payPeriod} onChange={handleInputChange} min="1" max="10" /></p>
 
-      <LoadingButton variant='contained' loading={crawlLoading} onClick={handleCrawl} color='warning'>Crawl 🐛🐜</LoadingButton>
+      <LoadingButton variant='contained' loading={crawlLoading} onClick={handleCrawl} color='error'>Crawl 🐛🐜</LoadingButton>
       {crawlStatus && <div className={styles.crawlStatus}>
-        <p>{crawlStatus}</p>
+        <Stack>{crawlStatus}</Stack>
         <p>Total: {totalHours} hours</p>
         <LoadingButton variant='contained' loading={submitLoading} onClick={handleSubmit} color='success'>Send it! 👌</LoadingButton>
       </div>}
