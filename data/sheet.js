@@ -1,6 +1,6 @@
 const { GoogleSpreadsheet } = require('google-spreadsheet');
 
-const secrets = require('./secrets')
+const secrets = require('../secrets')
 
 
 class Sheet {

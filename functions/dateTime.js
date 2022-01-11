@@ -1,3 +1,4 @@
+
 export const msToHours = (duration) => {
     const calcMinutes = Math.floor((duration / (1000 * 60)) % 60);
     const calcHours = Math.floor((duration / (1000 * 60 * 60)) % 24);

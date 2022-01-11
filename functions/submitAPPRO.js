@@ -1,6 +1,6 @@
 const puppeteer = require('puppeteer');
 const secrets = require('../secrets');
-const Sheet = require('../sheet');
+const Sheet = require('../data/sheet');
 
 // this needs to be converted to crawl then simply submit the hours for approval
 

@@ -39,3 +39,6 @@ table {
   border-style: ridge;
 }
 
+.hidden {
+  visibility: hidden;
+}

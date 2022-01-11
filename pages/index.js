@@ -1,5 +1,7 @@
 /* eslint-disable @next/next/no-page-custom-font */
 import Head from 'next/head'
+import Image from 'next/image'
+import clockGIF from '../public/ClockGIF2.gif'
 import { useState } from 'react'
 import LoadingButton from '@mui/lab/LoadingButton'
 import { Stack } from '@mui/material'
@@ -107,9 +109,12 @@ export default function Home({ date, clockedIn, startTime, endTime, doneForDay, 
       </div>
 
       {shouldShowClockIn &&
-        <LoadingButton variant="contained" onClick={clockIn} loading={loading}>Clock in ⏰</LoadingButton>}
-      {shouldShowClockOut &&
-        <LoadingButton variant='contained' onClick={clockOut} loading={loading}>Clock out ⏰</LoadingButton>}
+        <LoadingButton variant="contained" onClick={clockIn} loading={loading}>Clock in &nbsp;⏰</LoadingButton>}
+      {shouldShowClockOut && <div>
+        <LoadingButton variant='contained' onClick={clockOut} loading={loading}>
+          Clock out &nbsp;&nbsp;<Image src={clockGIF} height={30} width={30} className={loading ? 'hidden' : {}} alt='clock.gif'></Image>
+        </LoadingButton>
+      </div>}
 
       <p>{clockedStatus}</p>
       <h2>Crawl banner and enter hours from time sheet</h2>

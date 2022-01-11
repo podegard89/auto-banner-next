@@ -1,4 +1,4 @@
-import Sheet from "../../../sheet";
+import Sheet from "../../../data/sheet";
 import { formatDate } from "../../../functions/dateTime"
 
 export default async function handler(req, res) {

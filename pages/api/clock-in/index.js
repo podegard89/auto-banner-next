@@ -1,4 +1,4 @@
-import Sheet from "../../../sheet";
+import Sheet from "../../../data/sheet";
 
 export default async function handler(req, res) {
     const sheet = new Sheet();

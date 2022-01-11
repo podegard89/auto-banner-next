@@ -1,6 +1,6 @@
 const puppeteer = require('puppeteer');
 const secrets = require('../secrets');
-const Sheet = require('../sheet');
+const Sheet = require('../data/sheet');
 
 export default async function crawl(payPeriod) {
 
