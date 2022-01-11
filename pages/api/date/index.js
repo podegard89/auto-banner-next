@@ -2,11 +2,9 @@ import Sheet from "../../../data/sheet";
 import { formatDate } from "../../../functions/dateTime"
 
 export default async function handler(req, res) {
-    const sheet = new Sheet();
-    await sheet.load();
-
-
     if (req.method === 'GET') {
+        const sheet = new Sheet();
+        await sheet.load();
         try {
             const dateObject = new Date();
             const date = formatDate(dateObject);

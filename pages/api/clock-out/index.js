@@ -2,10 +2,10 @@ import Sheet from "../../../data/sheet";
 import { msToHours } from "../../../functions/dateTime"
 
 export default async function handler(req, res) {
-    const sheet = new Sheet();
-    await sheet.load();
 
     if (req.method === 'POST') {
+        const sheet = new Sheet();
+        await sheet.load();
         try {
             const dateObject = new Date();
             const end = dateObject.toLocaleTimeString();
