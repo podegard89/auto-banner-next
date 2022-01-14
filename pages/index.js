@@ -131,7 +131,7 @@ export default function Home({ date, clockedIn, startTime, endTime, doneForDay, 
   )
 }
 
-export const getStaticProps = async () => {
+export const getServerSideProps = async () => {
   const res = await fetch(`http://localhost:3000/api/date`);
   const json = await res.json();
   console.log(json)

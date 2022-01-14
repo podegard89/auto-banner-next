@@ -16,10 +16,11 @@ export default async function crawl(payPeriod) {
     await loginFormElements[1].type(secrets.PASSWORD);
     await loginFormElements[2].click();
 
-    const waitThenClick = async (selector) => {
+    const waitThenClick = async (selector, clicks) => {
         await page.waitForSelector(selector);
         const element = await page.$(selector);
-        await element.click();
+        await element.click({ clickCount: clicks });
+        return element;
     }
 
     // get rows from selector sheet
@@ -30,13 +31,13 @@ export default async function crawl(payPeriod) {
 
     // crawl to banner time sheet
     for (let row of selectors) {
-        await waitThenClick(row.selector);
+        await waitThenClick(row.selector, 1);
     }
 
 
     // grabs last payPeriod rows from time sheet
     const timeSheetRows = (await sheet.getRows(0)).slice(1).slice(-payPeriod);
-    console.log(timeSheetRows.length);
+    // console.log(timeSheetRows.length);
 
     // stores objects containing info about logged shifts
     const loggedShifts = [];
@@ -44,7 +45,7 @@ export default async function crawl(payPeriod) {
     // then loop through the data and enter it into banner time sheet
     for (const [index, row] of timeSheetRows.entries()) {
         if (index === timeSheetRows.length - 5) {
-            await waitThenClick('[value="Next"]');
+            await waitThenClick('[value="Next"]', 1);
         }
 
         const shiftDate = row.date;
@@ -52,15 +53,16 @@ export default async function crawl(payPeriod) {
         loggedShifts.push({ shiftDate, shiftHours });
         totalHours += parseInt(shiftHours);
 
-        await waitThenClick(`[title="Enter Hours for 015 Hourly Pay for ${shiftDate}"]`);
+        await waitThenClick(`[title="Enter Hours for 015 Hourly Pay for ${shiftDate}"]`, 1);
 
-        await page.waitForSelector('input[name="Hours"]');
+        // await page.waitForSelector('input[name="Hours"]');
 
-        const hoursInput = await page.$('input[name="Hours"]');
-        await hoursInput.click({ clickCount: 3 });
+        // const hoursInput = await page.$('input[name="Hours"]');
+        // await hoursInput.click({ clickCount: 3 });
+        const hoursInput = await waitThenClick('input[name="Hours"]', 3);
         await hoursInput.type(shiftHours);
-        const saveButton = await page.$('input[value="Save"]');
-        await saveButton.click();
+
+        await waitThenClick('input[value="Save"]', 1);
     }
 
     // I am not automatically closing the browser for now so I can confirm
