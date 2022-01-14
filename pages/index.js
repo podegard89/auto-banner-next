@@ -39,7 +39,6 @@ export default function Home({ date, clockedIn, startTime, endTime, doneForDay, 
       headers: { 'Content-Type': 'text/plain' },
       body: text
     });
-    console.log(res)
     const json = await res.json();
     return json;
   }
@@ -68,7 +67,13 @@ export default function Home({ date, clockedIn, startTime, endTime, doneForDay, 
   const handleCrawl = async () => {
     setCrawlLoading(true);
     const json = await httpPost('api/crawl', payPeriod);
-    console.log(json)
+
+    if (json.serverError) {
+      setCrawlStatus(json.serverError);
+      setCrawlLoading(false);
+      return;
+    }
+
     const shiftJSX = json.loggedShifts.map(s => {
       return <p key={s.shiftDate}>{s.shiftDate}: {s.shiftHours} hours</p>
     });
