@@ -35,22 +35,28 @@ export default async function crawl(payPeriod) {
             await waitThenClick(row.selector, 1);
         }
 
-
-        // grabs last payPeriod rows from time sheet
+        // grabs last payPeriod rows from spreadsheet
         const timeSheetRows = (await sheet.getRows(0)).slice(1).slice(-payPeriod);
         // console.log(timeSheetRows.length);
 
         // stores objects containing info about logged shifts
         const loggedShifts = [];
         let totalHours = 0;
+
+        //get current day of the week
+        const dayOfWeek = new Date().getDay();
+
         // then loop through the data and enter it into banner time sheet
         for (const [index, row] of timeSheetRows.entries()) {
-            if (index === timeSheetRows.length - 5) {
+
+            if (index >= timeSheetRows.length - dayOfWeek + 1) {
                 await waitThenClick('[value="Next"]', 1);
             }
 
             const shiftDate = row.date;
             const shiftHours = row.hours;
+            loggedShifts.push({ shiftDate, shiftHours });
+            totalHours += parseInt(shiftHours);
 
             await waitThenClick(`[title="Enter Hours for 015 Hourly Pay for ${shiftDate}"]`, 1);
 
@@ -62,9 +68,6 @@ export default async function crawl(payPeriod) {
             await hoursInput.type(shiftHours);
 
             await waitThenClick('input[value="Save"]', 1);
-
-            loggedShifts.push({ shiftDate, shiftHours });
-            totalHours += parseInt(shiftHours);
         }
 
         return { loggedShifts, totalHours };
