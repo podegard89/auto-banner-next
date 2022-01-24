@@ -49,6 +49,7 @@ export default async function crawl(payPeriod) {
         // then loop through the data and enter it into banner time sheet
         for (const [index, row] of timeSheetRows.entries()) {
 
+            //updated this logic, needs testing
             if (timeSheetRows.length > 5) {
                 index === 5 ? await waitThenClick('[value="Next"]', 1) : null;
             }
