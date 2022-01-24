@@ -49,8 +49,8 @@ export default async function crawl(payPeriod) {
         // then loop through the data and enter it into banner time sheet
         for (const [index, row] of timeSheetRows.entries()) {
 
-            if (index >= timeSheetRows.length - dayOfWeek + 1) {
-                await waitThenClick('[value="Next"]', 1);
+            if (timeSheetRows.length > 5) {
+                index === 5 ? await waitThenClick('[value="Next"]', 1) : null;
             }
 
             const shiftDate = row.date;
