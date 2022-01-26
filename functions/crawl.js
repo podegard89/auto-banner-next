@@ -1,28 +1,32 @@
+import next from 'next';
+
 const puppeteer = require('puppeteer');
 const secrets = require('../secrets');
 const Sheet = require('../data/sheet');
 
 export default async function crawl(payPeriod) {
 
+
     //headless in prod
     //head in dev
     const browser = await puppeteer.launch({ headless: false });
-    try {
-        const page = await browser.newPage();
-        await page.goto(secrets.bannerUrl);
 
+    const page = await browser.newPage();
+    await page.goto(secrets.bannerUrl);
+
+    const waitThenClick = async (selector, clicks) => {
+        await page.waitForSelector(selector);
+        const element = await page.$(selector);
+        await element.click({ clickCount: clicks });
+        return element;
+    }
+
+    try {
         //login
         const loginFormElements = await page.$$('input');
         await loginFormElements[0].type(secrets.USERNAME);
         await loginFormElements[1].type(secrets.PASSWORD);
         await loginFormElements[2].click();
-
-        const waitThenClick = async (selector, clicks) => {
-            await page.waitForSelector(selector);
-            const element = await page.$(selector);
-            await element.click({ clickCount: clicks });
-            return element;
-        }
 
         // get rows from selector sheet
         const sheet = new Sheet();
@@ -43,30 +47,42 @@ export default async function crawl(payPeriod) {
         const loggedShifts = [];
         let totalHours = 0;
 
-        //get current day of the week
-        const dayOfWeek = new Date().getDay();
-
         // then loop through the data and enter it into banner time sheet
         for (const [index, row] of timeSheetRows.entries()) {
 
-            //updated this logic, needs testing
-            if (timeSheetRows.length > 5) {
-                index === 5 ? await waitThenClick('[value="Next"]', 1) : null;
+            // old logic
+            // if (timeSheetRows.length > 5) {
+            //     index === timeSheetRows.length - 5 ? await waitThenClick('[value="Next"]', 1) : null;
+            // }
+
+            const { date, hours } = row;
+            loggedShifts.push({ date, hours });
+            totalHours += parseInt(hours);
+
+            const timeInputSelector = `[title="Enter Hours for 015 Hourly Pay for ${date}"]`;
+
+            let shouldPressNext = false;
+
+            try {
+                await page.waitForSelector(timeInputSelector, { timeout: 2000 });
+            } catch (e) {
+                shouldPressNext = true;
             }
 
-            const shiftDate = row.date;
-            const shiftHours = row.hours;
-            loggedShifts.push({ shiftDate, shiftHours });
-            totalHours += parseInt(shiftHours);
+            if (shouldPressNext) {
+                try {
+                    await page.waitForSelector('[value="Next"]', { timeout: 2000 });
+                } catch (e) {
+                    await browser.close();
+                    break;
+                }
+            }
 
-            await waitThenClick(`[title="Enter Hours for 015 Hourly Pay for ${shiftDate}"]`, 1);
+            shouldPressNext ? await waitThenClick('[value="Next"]', 1) : null;
+            await waitThenClick(timeInputSelector, 1);
 
-            // await page.waitForSelector('input[name="Hours"]');
-
-            // const hoursInput = await page.$('input[name="Hours"]');
-            // await hoursInput.click({ clickCount: 3 });
             const hoursInput = await waitThenClick('input[name="Hours"]', 3);
-            await hoursInput.type(shiftHours);
+            await hoursInput.type(hours);
 
             await waitThenClick('input[value="Save"]', 1);
         }
@@ -77,9 +93,6 @@ export default async function crawl(payPeriod) {
         console.log(e);
         return {};
     } finally {
-        // I am not automatically closing the browser for now so I can confirm
-        // everything is working and manually submit hours for approval.
-        // trying to figure out why the browser closes before entering the final day!!!
         await browser.close();
     }
 }

@@ -13,9 +13,9 @@ class Sheet {
         await this.doc.loadInfo();
     }
 
-    async addRows(rows) {
+    async addRow(row) {
         const sheet = this.doc.sheetsByIndex[0];
-        await sheet.addRows([rows]);
+        await sheet.addRows([row]);
     }
 
     async getRows(i) {
@@ -27,11 +27,13 @@ class Sheet {
     async getCurrentShift(date) {
         const sheet = this.doc.sheetsByIndex[0];
         const rows = await sheet.getRows();
-        const lastRow = rows[rows.length - 1];
 
-        if (lastRow.date === date) {
-            return lastRow;
+        for (const row of rows) {
+            if (row.date === date) {
+                return row;
+            }
         }
+
         return {};
     }
 }

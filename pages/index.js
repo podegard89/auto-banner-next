@@ -75,7 +75,7 @@ export default function Home({ date, clockedIn, startTime, endTime, doneForDay, 
     }
 
     const shiftJSX = json.loggedShifts.map(s => {
-      return <p key={s.shiftDate}>{s.shiftDate}: {s.shiftHours} hours</p>
+      return <p key={s.date}>{s.date}: {s.hours} hours</p>
     });
     setTotalHours(json.totalHours);
     setCrawlStatus(shiftJSX);

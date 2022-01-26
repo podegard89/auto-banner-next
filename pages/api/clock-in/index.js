@@ -11,7 +11,7 @@ export default async function handler(req, res) {
             const start = dateObject.toLocaleTimeString();
             const startMS = Date.now();
             const date = req.body;
-            await sheet.addRows({ date, start, startMS });
+            await sheet.addRow({ date, start, startMS });
             res.status(200).json({ start, status: "Clocked in!" });
         } catch (error) {
             console.log(error);
