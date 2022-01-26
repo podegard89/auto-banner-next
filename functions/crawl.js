@@ -86,13 +86,15 @@ export default async function crawl(payPeriod) {
 
             await waitThenClick('input[value="Save"]', 1);
         }
-
+        // tried to add this thinking it would try to resolve this and return before executing
+        // finally block... this damn finally block still goes off...
+        // going to try deleting the finally and closing the browser in the try/catch alone
+        await browser.close();
         return { loggedShifts, totalHours };
 
     } catch (e) {
         console.log(e);
-        return {};
-    } finally {
         await browser.close();
+        return {};
     }
 }
