@@ -6,7 +6,6 @@ const Sheet = require('../data/sheet');
 
 export default async function crawl(payPeriod) {
 
-
     //headless in prod
     //head in dev
     const browser = await puppeteer.launch({ headless: false });
@@ -48,12 +47,7 @@ export default async function crawl(payPeriod) {
         let totalHours = 0;
 
         // then loop through the data and enter it into banner time sheet
-        for (const [index, row] of timeSheetRows.entries()) {
-
-            // old logic
-            // if (timeSheetRows.length > 5) {
-            //     index === timeSheetRows.length - 5 ? await waitThenClick('[value="Next"]', 1) : null;
-            // }
+        for (const row of timeSheetRows) {
 
             const { date, hours } = row;
             loggedShifts.push({ date, hours });
@@ -64,16 +58,15 @@ export default async function crawl(payPeriod) {
             let shouldPressNext = false;
 
             try {
-                await page.waitForSelector(timeInputSelector, { timeout: 2000 });
+                await page.waitForSelector(timeInputSelector, { timeout: 1000 });
             } catch (e) {
                 shouldPressNext = true;
             }
 
             if (shouldPressNext) {
                 try {
-                    await page.waitForSelector('[value="Next"]', { timeout: 2000 });
+                    await page.waitForSelector('[value="Next"]', { timeout: 1000 });
                 } catch (e) {
-                    await browser.close();
                     break;
                 }
             }
@@ -86,15 +79,15 @@ export default async function crawl(payPeriod) {
 
             await waitThenClick('input[value="Save"]', 1);
         }
-        // tried to add this thinking it would try to resolve this and return before executing
-        // finally block... this damn finally block still goes off...
-        // going to try deleting the finally and closing the browser in the try/catch alone
-        await browser.close();
+
         return { loggedShifts, totalHours };
 
     } catch (e) {
         console.log(e);
-        await browser.close();
         return {};
+    } finally {
+        await page.waitForNavigation();
+        await page.click('input[value="Preview"]');
+        await browser.close();
     }
 }

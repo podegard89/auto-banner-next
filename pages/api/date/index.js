@@ -9,7 +9,7 @@ export default async function handler(req, res) {
             const dateObject = new Date();
             const date = formatDate(dateObject);
             const currentShift = await sheet.getCurrentShift(date);
-            console.log(currentShift)
+
             const clockStatus = {
                 date,
                 clockedIn: currentShift.start && !currentShift.end,
