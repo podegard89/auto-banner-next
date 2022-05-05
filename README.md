@@ -2,7 +2,7 @@ As a contracted and remote STLCC employee, there were a couple of systems in whi
 
 From a single page, I can clock in, clock out, and input shift data into one of STLCC's online applications called "Banner" (hence the project name). 
 
-The tech stack:
+#The tech stack:
 
 Next.js
 Puppeteer
