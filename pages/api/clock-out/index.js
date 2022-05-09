@@ -14,7 +14,7 @@ export default async function handler(req, res) {
             const currentShift = await sheet.getCurrentShift(req.body);
             currentShift.end = end;
             currentShift.endMS = endMS;
-            currentShift.hours = msToHours(endMS - currentShift.startMS) - 0.5;
+            currentShift.hours = msToHours(endMS - currentShift.startMS);
             await currentShift.save();
             res.status(200).json({ end, status: "Clocked out!", hours: currentShift.hours });
         } catch (error) {
