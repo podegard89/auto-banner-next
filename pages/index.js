@@ -5,10 +5,8 @@ import fetchInitialProps from '../functions/fetchInitialProps'
 import ClockInClockOut from '../components/ClockInClockOut'
 import CrawlBanner from '../components/CrawlBanner'
 
-export default function Home({ date, clockedInOrOut, startTime, endTime, doneForDay, shiftHours }) {
-  const [start, setStart] = useState(startTime);
-  const [end, setEnd] = useState(endTime);
-  const [hours, setHours] = useState(shiftHours);
+export default function Home(props) {
+
 
   return (
     <div className='main'>
@@ -27,14 +25,7 @@ export default function Home({ date, clockedInOrOut, startTime, endTime, doneFor
 
       <h1>Time Clock 📅</h1>
 
-      <div className='timeClock'>
-        <p>Date: <strong>{date}</strong></p>
-        <p>Clock-in Time: <strong>{start}</strong></p>
-        <p>Clock-out Time: <strong>{end}</strong></p>
-        <p>Hours: <strong>{hours}</strong></p>
-      </div>
-
-      <ClockInClockOut date={date} clockedInOrOut={clockedInOrOut} doneForDay={doneForDay} setStart={setStart} setEnd={setEnd} setHours={setHours} />
+      <ClockInClockOut props={props} />
 
       <CrawlBanner />
     </div>

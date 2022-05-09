@@ -3,8 +3,15 @@ import { useState } from 'react'
 import Image from 'next/image'
 import clockGIF from '../public/ClockGIF2.gif'
 import httpPost from '../functions/httpPost'
+import TimeClockInfo from './TimeClockInfo'
 
-const ClockInClockOut = ({ date, clockedInOrOut, doneForDay, setStart, setEnd, setHours }) => {
+const ClockInClockOut = (props) => {
+    const { date, startTime, endTime, shiftHours, clockedInOrOut, doneForDay } = props.props;
+
+    const [start, setStart] = useState(startTime);
+    const [end, setEnd] = useState(endTime);
+    const [hours, setHours] = useState(shiftHours);
+
     const [isDoneForDay, setIsDoneForDay] = useState(doneForDay);
 
     const [loading, setLoading] = useState(false);
@@ -34,6 +41,7 @@ const ClockInClockOut = ({ date, clockedInOrOut, doneForDay, setStart, setEnd, s
 
     return (
         <>
+            <TimeClockInfo date={date} start={start} end={end} hours={hours} />
             {shouldShowClockIn &&
                 <LoadingButton variant="contained" onClick={clockIn} loading={loading}>Clock in &nbsp;⏰</LoadingButton>}
             {shouldShowClockOut && <div>
