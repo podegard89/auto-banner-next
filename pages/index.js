@@ -1,35 +1,26 @@
 /* eslint-disable @next/next/no-page-custom-font */
 import Head from 'next/head'
-import Image from 'next/image'
-import clockGIF from '../public/ClockGIF2.gif'
 import { useState } from 'react'
 import LoadingButton from '@mui/lab/LoadingButton'
 import { Stack } from '@mui/material'
 import styles from '../styles/Home.module.css'
 import fetchInitialProps from '../functions/fetchInitialProps'
 import TimeClockInfo from '../components/TimeClockInfo'
+import ClockInClockOut from '../components/ClockInClockOut'
 
-export default function Home({ date, clockedIn, startTime, endTime, doneForDay, shiftHours }) {
+export default function Home({ date, clockedInOrOut, startTime, endTime, doneForDay, shiftHours }) {
   const [start, setStart] = useState(startTime);
   const [end, setEnd] = useState(endTime);
   const [hours, setHours] = useState(shiftHours);
 
-  const [isClockedIn, setIsClockedIn] = useState(clockedIn);
-  const [isDoneForDay, setIsDoneForDay] = useState(doneForDay);
-
-  const [loading, setLoading] = useState(false);
   const [crawlLoading, setCrawlLoading] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
 
-  const [clockedStatus, setClockedStatus] = useState('');
   const [crawlStatus, setCrawlStatus] = useState('');
   const [totalHours, setTotalHours] = useState(0);
   const [submitStatus, setSubmitStatus] = useState('');
 
   const [payPeriod, setPayPeriod] = useState(10);
-
-  const shouldShowClockIn = !isClockedIn && !isDoneForDay;
-  const shouldShowClockOut = isClockedIn && !isDoneForDay;
 
   const handleInputChange = (event) => {
     setPayPeriod(event.target.value)
@@ -43,27 +34,6 @@ export default function Home({ date, clockedIn, startTime, endTime, doneForDay, 
     });
     const json = await res.json();
     return json;
-  }
-
-  const clockIn = async () => {
-    setLoading(true);
-    const json = await httpPost('api/clock-in', date);
-    console.log(json)
-    setStart(json.start);
-    setClockedStatus(json.status);
-    setIsClockedIn(true);
-    setLoading(false);
-  }
-
-  const clockOut = async () => {
-    setLoading(true);
-    const json = await httpPost('api/clock-out', date);
-    setEnd(json.end);
-    setClockedStatus(json.status);
-    setHours(json.hours);
-    setIsClockedIn(false);
-    setIsDoneForDay(true);
-    setLoading(false);
   }
 
   const handleCrawl = async () => {
@@ -110,15 +80,8 @@ export default function Home({ date, clockedIn, startTime, endTime, doneForDay, 
 
       <TimeClockInfo date={date} start={start} end={end} hours={hours} />
 
-      {shouldShowClockIn &&
-        <LoadingButton variant="contained" onClick={clockIn} loading={loading}>Clock in &nbsp;⏰</LoadingButton>}
-      {shouldShowClockOut && <div>
-        <LoadingButton variant='contained' onClick={clockOut} loading={loading}>
-          Clock out &nbsp;&nbsp;<Image src={clockGIF} height={30} width={30} className={loading ? 'hidden' : {}} alt='clock.gif'></Image>
-        </LoadingButton>
-      </div>}
+      <ClockInClockOut date={date} clockedInOrOut={clockedInOrOut} doneForDay={doneForDay} setStart={setStart} setEnd={setEnd} setHours={setHours} httpPost={httpPost} />
 
-      <p>{clockedStatus}</p>
       <h2>Crawl banner and enter hours from time sheet</h2>
       <p>Enter pay period length (1-10 days): <input type="number" value={payPeriod} onChange={handleInputChange} min="1" max="10" /></p>
 
