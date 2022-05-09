@@ -12,4 +12,4 @@ In the process of learning React, I sought a technology that would allow me writ
 
 Goals:  
 -Host the application with authentication  
--Refactor the chaotic amount of state in the bloated App component (implement Redux??)
+-Implement Redux or React Context API to break up the ClockInClockOut component
