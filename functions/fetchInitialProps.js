@@ -10,12 +10,12 @@ export default async function fetchInitialProps() {
         const currentShift = await sheet.getCurrentShift(date);
 
         const clockStatus = {
-            "date": date,
-            "clockedIn": currentShift.start && !currentShift.end,
-            "startTime": currentShift.start,
-            "endTime": currentShift.end,
-            "shiftHours": currentShift.hours,
-            "doneForDay": currentShift.start && currentShift.end
+            date,
+            clockedIn: currentShift.start && !currentShift.end,
+            startTime: currentShift.start,
+            endTime: currentShift.end,
+            shiftHours: currentShift.hours,
+            doneForDay: currentShift.start && currentShift.end
         }
 
         return clockStatus;
