@@ -6,6 +6,7 @@ import { useState } from 'react'
 import LoadingButton from '@mui/lab/LoadingButton'
 import { Stack } from '@mui/material'
 import styles from '../styles/Home.module.css'
+import fetchInitialProps from '../functions/fetchInitialProps'
 
 export default function Home({ date, clockedIn, startTime, endTime, doneForDay, shiftHours }) {
   const [start, setStart] = useState(startTime);
@@ -137,8 +138,7 @@ export default function Home({ date, clockedIn, startTime, endTime, doneForDay, 
 }
 
 export const getServerSideProps = async () => {
-  const res = await fetch(`http://localhost:3000/api/date`);
-  const json = await res.json();
-  console.log(json)
-  return { props: json };
+  const clockStatus = await fetchInitialProps();
+  console.log(clockStatus)
+  return { props: clockStatus };
 }
