@@ -7,6 +7,7 @@ import styles from '../styles/Home.module.css'
 import fetchInitialProps from '../functions/fetchInitialProps'
 import TimeClockInfo from '../components/TimeClockInfo'
 import ClockInClockOut from '../components/ClockInClockOut'
+import httpPost from '../functions/httpPost'
 
 export default function Home({ date, clockedInOrOut, startTime, endTime, doneForDay, shiftHours }) {
   const [start, setStart] = useState(startTime);
@@ -24,16 +25,6 @@ export default function Home({ date, clockedInOrOut, startTime, endTime, doneFor
 
   const handleInputChange = (event) => {
     setPayPeriod(event.target.value)
-  }
-
-  const httpPost = async (route, text) => {
-    const res = await fetch(`http://localhost:3000/${route}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain' },
-      body: text
-    });
-    const json = await res.json();
-    return json;
   }
 
   const handleCrawl = async () => {
@@ -80,7 +71,7 @@ export default function Home({ date, clockedInOrOut, startTime, endTime, doneFor
 
       <TimeClockInfo date={date} start={start} end={end} hours={hours} />
 
-      <ClockInClockOut date={date} clockedInOrOut={clockedInOrOut} doneForDay={doneForDay} setStart={setStart} setEnd={setEnd} setHours={setHours} httpPost={httpPost} />
+      <ClockInClockOut date={date} clockedInOrOut={clockedInOrOut} doneForDay={doneForDay} setStart={setStart} setEnd={setEnd} setHours={setHours} />
 
       <h2>Crawl banner and enter hours from time sheet</h2>
       <p>Enter pay period length (1-10 days): <input type="number" value={payPeriod} onChange={handleInputChange} min="1" max="10" /></p>

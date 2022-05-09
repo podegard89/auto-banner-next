@@ -2,8 +2,9 @@ import LoadingButton from '@mui/lab/LoadingButton'
 import { useState } from 'react'
 import Image from 'next/image'
 import clockGIF from '../public/ClockGIF2.gif'
+import httpPost from '../functions/httpPost'
 
-const ClockInClockOut = ({ date, clockedInOrOut, doneForDay, setStart, setEnd, setHours, httpPost }) => {
+const ClockInClockOut = ({ date, clockedInOrOut, doneForDay, setStart, setEnd, setHours }) => {
     const [isDoneForDay, setIsDoneForDay] = useState(doneForDay);
 
     const [loading, setLoading] = useState(false);
@@ -11,7 +12,6 @@ const ClockInClockOut = ({ date, clockedInOrOut, doneForDay, setStart, setEnd, s
 
     const shouldShowClockIn = clockedStatus === "Clocked out!" && !isDoneForDay;
     const shouldShowClockOut = clockedStatus === "Clocked in!" && !isDoneForDay;
-
 
     const clockIn = async () => {
         setLoading(true);

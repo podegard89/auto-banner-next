@@ -10,6 +10,7 @@ export default async function fetchInitialProps() {
         const currentShift = await sheet.getCurrentShift(date);
         const clockStatus = { date, clockedInOrOut: "Clocked out!" };
 
+        // determine what server side props to load to avoid undefined JSON error
         if (currentShift.start && !currentShift.end) {
             clockStatus.clockedInOrOut = "Clocked in!";
             clockStatus.startTime = currentShift.start;
