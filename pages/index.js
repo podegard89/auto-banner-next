@@ -7,6 +7,7 @@ import LoadingButton from '@mui/lab/LoadingButton'
 import { Stack } from '@mui/material'
 import styles from '../styles/Home.module.css'
 import fetchInitialProps from '../functions/fetchInitialProps'
+import TimeClockInfo from '../components/TimeClockInfo'
 
 export default function Home({ date, clockedIn, startTime, endTime, doneForDay, shiftHours }) {
   const [start, setStart] = useState(startTime);
@@ -107,12 +108,7 @@ export default function Home({ date, clockedIn, startTime, endTime, doneForDay, 
 
       <h1>Time Clock 📅</h1>
 
-      <div className='timeClock'>
-        <p>Date: <strong>{date}</strong></p>
-        <p>Clock-in Time: <strong>{start}</strong></p>
-        <p>Clock-out Time: <strong>{end}</strong></p>
-        <p>Hours: <strong>{hours}</strong></p>
-      </div>
+      <TimeClockInfo date={date} start={start} end={end} hours={hours} />
 
       {shouldShowClockIn &&
         <LoadingButton variant="contained" onClick={clockIn} loading={loading}>Clock in &nbsp;⏰</LoadingButton>}
