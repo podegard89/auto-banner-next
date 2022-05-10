@@ -5,7 +5,7 @@ export default async function handler(req, res) {
         const payPeriod = Number(req.body);
         const json = await crawl(payPeriod);
         console.log(json);
-        if (json.loggedShifts && json.totalHours) {
+        if (json.loggedShifts && json.totalHours >= 0) {
             res.status(200).json(json);
         } else {
             res.status(400).json({ serverError: "Internal Server Error" });

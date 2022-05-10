@@ -1,8 +1,7 @@
 /* eslint-disable @next/next/no-page-custom-font */
 import Head from 'next/head'
-import { useState } from 'react'
 import fetchInitialProps from '../functions/fetchInitialProps'
-import ClockInClockOut from '../components/ClockInClockOut'
+import TimeClock from '../components/TimeClock'
 import CrawlBanner from '../components/CrawlBanner'
 
 export default function Home(props) {
@@ -23,9 +22,7 @@ export default function Home(props) {
         />
       </Head>
 
-      <h1>Time Clock 📅</h1>
-
-      <ClockInClockOut props={props} />
+      <TimeClock props={props} />
 
       <CrawlBanner />
     </div>

@@ -3,7 +3,7 @@ import { LoadingButton } from '@mui/lab'
 import { Stack } from '@mui/material'
 import { useState } from 'react';
 import httpPost from '../functions/httpPost';
-import Submit from './Submit';
+import SubmitButton from './SubmitButton';
 
 const CrawlBanner = () => {
     const [crawlLoading, setCrawlLoading] = useState(false);
@@ -30,6 +30,7 @@ const CrawlBanner = () => {
         const shiftJSX = json.loggedShifts.map(s => {
             return <p key={s.date}>{s.date}: {s.hours} hours</p>
         });
+        console.log(shiftJSX)
         setTotalHours(json.totalHours);
         setCrawlStatus(shiftJSX);
         setCrawlLoading(false);
@@ -42,12 +43,14 @@ const CrawlBanner = () => {
 
             <LoadingButton variant='contained' loading={crawlLoading} onClick={handleCrawl} color='error'>Crawl 🐛🐜</LoadingButton>
             {crawlStatus && <div>
-                <Stack>{crawlStatus}</Stack>
+                <Stack direction="column"
+                    justifyContent="center"
+                    alignItems="center">{crawlStatus}</Stack>
                 <p>Total: {totalHours} hours</p>
-                <Submit />
+                <SubmitButton />
             </div>}
         </>
     )
 }
 
-export default CrawlBanner
+export default CrawlBanner;

@@ -2,7 +2,7 @@ import React from 'react'
 import { useState } from 'react';
 import { LoadingButton } from '@mui/lab';
 
-const Submit = () => {
+const SubmitButton = () => {
     const [submitLoading, setSubmitLoading] = useState(false);
     const [submitStatus, setSubmitStatus] = useState('');
 
@@ -21,4 +21,4 @@ const Submit = () => {
     )
 }
 
-export default Submit
+export default SubmitButton;

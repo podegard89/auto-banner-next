@@ -5,7 +5,7 @@ import clockGIF from '../public/ClockGIF2.gif'
 import httpPost from '../functions/httpPost'
 import TimeClockInfo from './TimeClockInfo'
 
-const ClockInClockOut = (props) => {
+const TimeClock = (props) => {
     const { date, startTime, endTime, shiftHours, clockedInOrOut, doneForDay } = props.props;
 
     const [start, setStart] = useState(startTime);
@@ -41,12 +41,15 @@ const ClockInClockOut = (props) => {
 
     return (
         <>
+            <h1>Time Clock 📅</h1>
+
             <TimeClockInfo date={date} start={start} end={end} hours={hours} />
             {shouldShowClockIn &&
                 <LoadingButton variant="contained" onClick={clockIn} loading={loading}>Clock in &nbsp;⏰</LoadingButton>}
             {shouldShowClockOut && <div>
                 <LoadingButton variant='contained' onClick={clockOut} loading={loading}>
-                    Clock out &nbsp;&nbsp;<Image src={clockGIF} height={30} width={30} className={loading ? 'hidden' : {}} alt='clock.gif'></Image>
+                    Clock out &nbsp;&nbsp;
+                    <Image src={clockGIF} height={30} width={30} className={loading ? 'hidden' : {}} alt='clock.gif' />
                 </LoadingButton>
             </div>}
 
@@ -55,4 +58,4 @@ const ClockInClockOut = (props) => {
     )
 }
 
-export default ClockInClockOut;
+export default TimeClock;
